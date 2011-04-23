@@ -8,8 +8,7 @@ function JournalingHash(){
   var history = {};
   var props = {};
   var args = slice.call(arguments);
-  
-  
+
   this.name = function(){ return name; }
   this.history = function(name){ return history[name]; }
 
@@ -21,7 +20,7 @@ function JournalingHash(){
     props = args.shift();
   }
 
-  this.get = function(name){ return JSON.parse(jh[name]); }
+  this.get = function(name){ if(jh[name]){return JSON.parse(jh[name]); } }
   this.set = function(props, debugInfo){
     if(!debugInfo) throw("someone called set() without passing in debugInfo!");
     
@@ -44,14 +43,44 @@ function JournalingHash(){
     
     for(var name in props){
       if(props.hasOwnProperty(name)){
-        if(jh[name]){
-          ary = this.get(name);
-        }else{
-          ary = []; 
-        }
-
+        ary = this.get(name) || [];
         ary = ary.concat(props[name]);
         obj[name] = ary;
+      }
+    }
+    
+    this.set(obj, debugInfo);
+  };
+  
+  
+  var innerMerge = function(dest, props){
+    
+    if(Array.isArray(dest)){
+      return dest.concat(props);
+    }
+    
+    if(typeof(dest) == "object"){
+      var ret = {};
+      for(var key in props){
+        if(props.hasOwnProperty(key)){
+          ret[key] = innerMerge(dest[key], props[key]);
+        }
+      }
+      
+      return ret;
+    }
+    
+    return props;
+  };
+  
+  this.merge = function(props, debugInfo){
+    if(!debugInfo) throw("someone called merge() without passing in debugInfo!");
+    
+    var ary, obj={};
+    
+    for(var name in props){
+      if(props.hasOwnProperty(name)){
+        obj[name] = innerMerge(this.get(name), props[name]);
       }
     }
     

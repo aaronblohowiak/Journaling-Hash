@@ -34,6 +34,39 @@ Nested objects and arrays also work the way you want, so you can't have a consum
       jh.toJSON();
       // '{"a":[1,2,3],"b":[99,100],"c":[3.14]}'      
 
+## You can also perform a deep merge
+
+This merges objects (recursively), concats arrays and overrides everything else, using the type of the existing value.
+
+      jh = new JH("config", {a:[1, 2], o:{k: "v", n:{a:[2]}}, i:4});
+      jh.merge({a:[99], o:{k:"s", b:5, n:{a:[4]}}, i:false}, "testing merge");
+      jh.toJSON();
+      // '{"a":[1,2,99],"o":{"k":"s","b":5,"n":{"a":[2,4]}},"i":false}'
+
+## Real-World Use
+
+      function read(fname){return JSON.parse(fs.readFileSync(fname));}
+      
+      jh = new JH("config", read(defaults));
+      jh.merge(read(appConfig), appConfig);
+      envConfig = "./environments/"+(process.env.APP_ENV||"development")+".json"
+      jh.merge(read(envConfig), envConfig);
+      overrides = {};
+      "PORT LOGFILE LOGLEVEL APP_ROOT TMPDIR AWSKEY".split(" ").forEach(function(key){
+        if(process.env.hasOwnProperty(key)){
+          overrides[key] = process.env[key];
+        }
+      });
+      
+      jh.set(overrides, "overridden from command line");
+      
+      jh.get(someKey);
+      
+      //10 seconds of confusion.
+      
+      jh.history(someKey);
+      
+      //enlightenment, and easy fix!
 #API
 
     var jh = new JH([name], [properties]);

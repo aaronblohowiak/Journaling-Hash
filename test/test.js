@@ -41,7 +41,6 @@ deepEqual(jh.history("option1"),
   [JSON.stringify("pantalones"), "customization"]],
   "should record successive settings' source");
 
-
 jh = new JH("config", {nested:{opt:"val"}});
 jh.get("nested").opt = "val2";
 deepEqual(jh.get("nested"), {opt:"val"}, "should always copy objects");
@@ -50,5 +49,20 @@ jh = new JH("config", {a:[1,2], b:[99]});
 jh.push({a:3, b:100, c:3.14}, "latest data");
 deepEqual(jh.getAll(), {a:[1,2,3], b:[99, 100], c:[3.14]}, "should push new values to the end of old ones")
 
+jh = new JH("config", {a:[1, 2], o:{k: "v", n:{a:[2]}}, i:4});
+jh.merge({a:[99], o:{k:"s", b:5, n:{a:[4]}}, i:false}, "testing merge");
+deepEqual(jh.getAll(), {
+    a:[1,2,99],
+    o:{
+      k:"s",
+      n:{
+        a:[2, 4]
+      },
+      b: 5
+    },
+    i: false
+  }, 
+  "deep merge should merge objects (recursively), concat arrays and override everything else"
+);
 
 console.log("ok");
