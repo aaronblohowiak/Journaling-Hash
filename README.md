@@ -6,7 +6,7 @@ Journaling-Hash records the history of where keys are set for easy debugging.
 
 Maintains private (closured) name, history and data objects to help you be honest =).
 
-      JH = require('journaling-hash');
+      JH = require('Journaling-Hash');
       var jh = new JH({"color": "blue", "width": "900px"});
       jh.set({"color": "gray"}, "company settings");
       jh.set({"color": "#f0f", "width": "100px"}, "user settings");
@@ -84,6 +84,13 @@ This merges objects (recursively), concats arrays and overrides everything else,
       jh.history(someKey);
       
       //enlightenment, and easy fix!
+      
+## Install
+
+Sorry for the caps, bad habit.
+
+      npm install Journaling-Hash
+
 #API
 
     var jh = new JH([name], [properties]);
