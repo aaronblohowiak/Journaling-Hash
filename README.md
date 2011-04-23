@@ -27,6 +27,13 @@ Nested objects and arrays also work the way you want, so you can't have a consum
       jh.get("nested")
       // { opt: 'val' }
 
+## You can push values onto arrays as well.
+
+      jh = new JH("favorite numbers", {a:[1,2], b:[99]});
+      jh.push({a:3, b:100, c:3.14}, "more favorites");
+      jh.toJSON();
+      // '{"a":[1,2,3],"b":[99,100],"c":[3.14]}'      
+
 #API
 
     var jh = new JH([name], [properties]);
@@ -37,4 +44,8 @@ Nested objects and arrays also work the way you want, so you can't have a consum
 
 `jh.history(name)` - returns the full history for the given key as an array of [value, source] tuples, sorted from oldest to newest.
 
+`jh.getAll()` - returns all of the data, without history.
+
 `jh.toJSON()` - returns the JSON string for the object, discarding all history information.
+
+`jh.push(properties, debugInfo)` - `concat`'s the values of properties onto the appropriate keys.

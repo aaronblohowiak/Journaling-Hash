@@ -46,4 +46,9 @@ jh = new JH("config", {nested:{opt:"val"}});
 jh.get("nested").opt = "val2";
 deepEqual(jh.get("nested"), {opt:"val"}, "should always copy objects");
 
+jh = new JH("config", {a:[1,2], b:[99]});
+jh.push({a:3, b:100, c:3.14}, "latest data");
+deepEqual(jh.getAll(), {a:[1,2,3], b:[99, 100], c:[3.14]}, "should push new values to the end of old ones")
+
+
 console.log("ok");

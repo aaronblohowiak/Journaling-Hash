@@ -26,7 +26,7 @@ function JournalingHash(){
     if(!debugInfo) throw("someone called set() without passing in debugInfo!");
     
     var p;
-    for(key in props){
+    for(var key in props){
       if(props.hasOwnProperty(key)){
         p = JSON.stringify(props[key]);
         jh[key] = p;
@@ -36,13 +36,38 @@ function JournalingHash(){
     }
   };
   
-  this.toJSON = function(){
+  //props, debugInfo
+  this.push = function(props, debugInfo){
+    if(!debugInfo) throw("someone called push() without passing in debugInfo!");
+    
+    var ary, obj={};
+    
+    for(var name in props){
+      if(props.hasOwnProperty(name)){
+        if(jh[name]){
+          ary = this.get(name);
+        }else{
+          ary = []; 
+        }
+
+        ary = ary.concat(props[name]);
+        obj[name] = ary;
+      }
+    }
+    
+    this.set(obj, debugInfo);
+  };
+  
+  this.getAll = function(){
     var ret = {};
     for(key in jh){
       ret[key] = JSON.parse(jh[key]);
     }
-
-    return JSON.stringify(jh);
+    return ret;
+  };
+  
+  this.toJSON = function(){
+    return JSON.stringify(this.getAll());
   };
 
   this.set(props, "default");
