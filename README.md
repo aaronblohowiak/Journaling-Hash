@@ -1,22 +1,39 @@
 #Journaling-Hash
+
+## Easy Config Debugging!!
+
 Journaling-Hash records the history of where keys are set for easy debugging.
 
 Maintains private (closured) name, history and data objects to help you be honest =).
 
       JH = require('journaling-hash');
-      var jh = new JH({"color": "blue"});
+      var jh = new JH({"color": "blue", "width": "900px"});
       jh.set({"color": "gray"}, "company settings");
-      jh.set({"color": "#f0f"}, "user settings");
-      jh.get("color") 
+      jh.set({"color": "#f0f", "width": "100px"}, "user settings");
+      
+      jh.get("color");
       // "#f0f"
-      jh.history("color")
+      
+      jh.history("color");
+      //  Gets the full history for the property
       // [ [ '"blue"', 'default' ],
       //  [ '"gray"', 'company settings' ],
       //  [ '"#f0f"', 'user settings' ] ]
-      jh.set({"color": "black"})
+      
+      jh.history("width");
+      // Note that it only shows the changes
+      // [ [ '"900px"', 'default' ],
+      //   [ '"100px"', 'user settings' ] ]
+      
+      jh.set({"color": "black"});
       //throw('someone called set() without passing in debugInfo!');
+      
       jh.toJSON();
       //'{"color":"#f0f"}'
+      
+      jh.getAll();
+      // JS Object with *copy* of properties
+      //{"color":"#f0f"}
 
 ## Always returns a copy
 
